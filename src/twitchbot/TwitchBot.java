@@ -21,7 +21,17 @@ public class TwitchBot {
      */
     public static void main(String[] args) {
         Properties config = loadConfig();
-        
+        Bot kmBot = new Bot(config.getProperty("twitchUser"),config.getProperty("twitchPass"),config.getProperty("ircServer"),config.getProperty("ircPort"),config.getProperty("channel"));
+
+        try {
+            kmBot.setVerbose(true);
+            kmBot.connect(config.getProperty("ircServer"), Integer.parseInt(config.getProperty("ircPort")), config.getProperty("twitchPass"));
+            kmBot.joinChannel(config.getProperty("channel"));
+            kmBot.sendRawLine("CAP REQ :twitch.tv/commands");
+            kmBot.sendRawLine("CAP REQ :twitch.tv/tags");
+        } catch (Exception ex) {
+            Logger.getLogger(TwitchBot.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     private static Properties loadConfig(){

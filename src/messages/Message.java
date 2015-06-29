@@ -26,8 +26,7 @@ public class Message {
 
     public Message(String wholeText) {
         // Positions in msgSplit
-        int TIMESTAMP = 0;
-        int INFO = 1;
+        int INFO = 0;
         int CHANNEL = 3;
         int BODY_START = 4;
         
@@ -37,17 +36,17 @@ public class Message {
         int MOD = 5;
         
         String[] msgSplit = wholeText.split(" ");
-        this.timestamp = Integer.parseInt(msgSplit[TIMESTAMP]);
-        String[] infoSplit = msgSplit[INFO].split(";");
-        this.sender = infoSplit[NAME].substring(13);
-        this.sub = infoSplit[SUB].endsWith("1");
-        this.mod = infoSplit[MOD].endsWith("mod");
-        this.channel = msgSplit[CHANNEL].substring(1);
-        this.body = msgSplit[BODY_START].substring(1);
-        for (int i = BODY_START+1; i < msgSplit.length; i++) {
-            this.body = this.body.concat(" " + msgSplit[i]);
+        if (wholeText.startsWith("@color=")){
+            String[] infoSplit = msgSplit[INFO].split(";");
+            this.sender = infoSplit[NAME].substring(13);
+            this.sub = infoSplit[SUB].endsWith("1");
+            this.mod = infoSplit[MOD].endsWith("mod");
+            this.channel = msgSplit[CHANNEL];
+            this.body = msgSplit[BODY_START].substring(1);
+            for (int i = BODY_START+1; i < msgSplit.length; i++) {
+                this.body = this.body.concat(" " + msgSplit[i]);
+            }
         }
-        
     }
 
     public boolean isSub() {

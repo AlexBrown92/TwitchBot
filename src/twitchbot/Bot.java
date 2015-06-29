@@ -23,21 +23,18 @@ public class Bot extends PircBot {
     private String pass;
     private String server;
     private int port;
-    private boolean verbose;
 
-    public Bot(String twitchUser, String twitchPass, String server, String port, boolean verbose, String channel) {
+    public Bot(String twitchUser, String twitchPass, String server, String port, String channel) {
         this.channel = channel;
         this.username = twitchUser;
         this.pass = twitchPass;
         this.server = server;
         this.port = Integer.parseInt(port);
-        initBot();
+        this.setName(this.username);
+        this.setMessageDelay(1000);
     }
 
-    private void initBot() {
-        this.setName(this.username);
-        this.setVerbose(this.verbose);
-        this.setMessageDelay(1000);
+    public void initBot() {
         try {
             this.connect(this.server, this.port, this.pass);
             this.joinChannel(this.channel);
@@ -51,7 +48,12 @@ public class Bot extends PircBot {
     @Override
     protected void onUnknown(String line) {
         Message m = new Message(line);
-        m.toString();
+        System.out.println("T: " + m.getTimestamp());
+        System.out.println("U: " + m.getSender());
+        System.out.println("M: " + m.isMod());
+        System.out.println("S: " + m.isSub());
+        System.out.println("C: " + m.getChannel());
+        System.out.println("B: " + m.getBody());
     }
 
     @Override
