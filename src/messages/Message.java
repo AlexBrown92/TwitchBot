@@ -42,9 +42,13 @@ public class Message {
             this.sub = infoSplit[SUB].endsWith("1");
             this.mod = infoSplit[MOD].endsWith("mod");
             this.channel = msgSplit[CHANNEL];
-            this.body = msgSplit[BODY_START].substring(1);
-            for (int i = BODY_START+1; i < msgSplit.length; i++) {
-                this.body = this.body.concat(" " + msgSplit[i]);
+            if (msgSplit.length > BODY_START){
+                this.body = msgSplit[BODY_START].substring(1);
+                for (int i = BODY_START+1; i < msgSplit.length; i++) {
+                    this.body = this.body.concat(" " + msgSplit[i]);
+                }
+            } else {
+                this.body = "";
             }
         }
     }
