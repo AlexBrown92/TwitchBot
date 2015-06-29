@@ -48,12 +48,74 @@ public class Bot extends PircBot {
     @Override
     protected void onUnknown(String line) {
         Message m = new Message(line);
-        System.out.println("T: " + m.getTimestamp());
-        System.out.println("U: " + m.getSender());
-        System.out.println("M: " + m.isMod());
-        System.out.println("S: " + m.isSub());
-        System.out.println("C: " + m.getChannel());
-        System.out.println("B: " + m.getBody());
+        if (m.getSender() != null) {
+            // Mod / Sub Only stuff
+            if (m.isMod() || m.isSub()) {
+                String toUser = "-> " + m.getSender() + " -> ";
+                String[] msgSplit = m.getBody().split(" ");
+                if (m.getBody().startsWith("^") || m.getBody().startsWith("!")) {
+                    // Standard commands
+                    String prefix = msgSplit[0].substring(1, msgSplit[0].length()).toLowerCase();
+                    switch (prefix) {
+                        case "help":
+                            //TODO
+                            this.sendMessage(this.channel, toUser + "Not yet implemented (sorry)");
+                            break;
+                        case "mt":
+                            this.sendMessage(this.channel, toUser + "multitwitch.tv/" + this.channel.substring(1) + "/" + msgSplit[1]);
+                            break;
+                        case "dsn":
+                            this.sendMessage(this.channel, toUser + "dualstreamnow.com/dual.htm?stream1=" + this.channel.substring(1) + "&stream2=" + msgSplit[1]);
+                            break;
+                        case "blacklist":
+                        case "blacklistadd":
+                            //TODO
+                            if (m.isMod()) {
+                                this.sendMessage(this.channel, toUser + "Not yet implemented (sorry)");
+                            }
+                            break;
+                        case "blacklistremove":
+                            //TODO
+                            if (m.isMod()) {
+                                this.sendMessage(this.channel, toUser + "Not yet implemented (sorry)");
+                            }
+                            break;
+                        case "blacklistshow":
+                        case "blacklistlist":
+                        case "blacklistdisplay":
+                            //TODO
+                            if (m.isMod()) {
+                                this.sendMessage(this.channel, toUser + "Not yet implemented (sorry)");
+                            }
+                            break;
+                        case "newsubs":
+                            //TODO
+                            this.sendMessage(this.channel, toUser + "Not yet implemented (sorry)");
+                            break;
+                        default:
+                            //TODO
+                            this.sendMessage(this.channel, toUser + "Not yet implemented (sorry)");
+                            break;
+                    }
+                } else if (m.getBody().startsWith("+") && m.isMod()) {
+                    // Add commands
+                    String prefix = msgSplit[0].substring(1, msgSplit[0].length()).toLowerCase();
+                    //TODO
+                    this.sendMessage(this.channel, toUser + "Not yet implemented (sorry)");
+                } else if (m.getBody().startsWith("--") && m.isMod()) {
+                    // Remove command
+                    String prefix = msgSplit[0].substring(2, msgSplit[0].length()).toLowerCase();
+                    //TODO
+                    this.sendMessage(this.channel, toUser + "Not yet implemented (sorry)");
+                }
+
+            } // End of Mod/sub only stuff
+            // Mod Excluded stuff
+            if (!m.isMod()) {
+
+            } // End of Mod Excluded stuff
+
+        }
     }
 
     @Override
