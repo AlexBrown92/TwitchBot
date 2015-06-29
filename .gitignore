@@ -15,3 +15,6 @@ nbproject/*
 *.swp
 *.DS_Store
 *.lock
+
+#Don't want people seeing passwords and stuff...
+config.properties
