@@ -18,3 +18,4 @@ nbproject/*
 
 #Don't want people seeing passwords and stuff...
 config.properties
+/dist/
