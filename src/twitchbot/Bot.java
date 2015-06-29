@@ -107,6 +107,22 @@ public class Bot extends PircBot {
                     String prefix = msgSplit[0].substring(2, msgSplit[0].length()).toLowerCase();
                     //TODO
                     this.sendMessage(this.channel, toUser + "Not yet implemented (sorry)");
+                } else {
+                    // Easter eggs :)
+                    switch (m.getBody().toLowerCase()) {
+                        case "i love you km_bot":
+                            this.sendMessage(this.channel, toUser + "I <3 you too!");
+                            break;
+                        case "km_bot is a dog":
+                            this.sendMessage(this.channel, toUser + "Woof!");
+                            break;
+                        case "km_bot is a cat":
+                            this.sendMessage(this.channel, toUser + "Meow!");
+                            break;
+                        case "km_bot is a beatle":
+                            this.sendMessage(this.channel, toUser + "All you need is love!");
+                            break;
+                    }
                 }
 
             } // End of Mod/sub only stuff
