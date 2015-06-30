@@ -44,25 +44,25 @@ public class Bot extends PircBot {
                     String prefix = msgSplit[0].substring(1, msgSplit[0].length()).toLowerCase();
                     switch (prefix) {
                         case "help":
-                            this.sendMessage(this.channel, toUser + "The commands available are: " + commands.outputCommands());
+                            this.outputMessage(this.channel, toUser + "The commands available are: " + commands.outputCommands());
                             break;
                         case "mt":
-                            this.sendMessage(this.channel, toUser + "multitwitch.tv/" + this.channel.substring(1) + "/" + msgSplit[1]);
+                            this.outputMessage(this.channel, toUser + "multitwitch.tv/" + this.channel.substring(1) + "/" + msgSplit[1]);
                             break;
                         case "dsn":
-                            this.sendMessage(this.channel, toUser + "dualstreamnow.com/dual.htm?stream1=" + this.channel.substring(1) + "&stream2=" + msgSplit[1]);
+                            this.outputMessage(this.channel, toUser + "dualstreamnow.com/dual.htm?stream1=" + this.channel.substring(1) + "&stream2=" + msgSplit[1]);
                             break;
                         case "blacklist":
                         case "blacklistadd":
                             //TODO
                             if (m.isMod()) {
-                                this.sendMessage(this.channel, toUser + "Not yet implemented (sorry)");
+                                this.outputMessage(this.channel, toUser + "Not yet implemented (sorry)");
                             }
                             break;
                         case "blacklistremove":
                             //TODO
                             if (m.isMod()) {
-                                this.sendMessage(this.channel, toUser + "Not yet implemented (sorry)");
+                                this.outputMessage(this.channel, toUser + "Not yet implemented (sorry)");
                             }
                             break;
                         case "blacklistshow":
@@ -70,42 +70,42 @@ public class Bot extends PircBot {
                         case "blacklistdisplay":
                             //TODO
                             if (m.isMod()) {
-                                this.sendMessage(this.channel, toUser + "Not yet implemented (sorry)");
+                                this.outputMessage(this.channel, toUser + "Not yet implemented (sorry)");
                             }
                             break;
                         case "newsubs":
                             //TODO
-                            this.sendMessage(this.channel, toUser + "Not yet implemented (sorry)");
+                            this.outputMessage(this.channel, toUser + "Not yet implemented (sorry)");
                             break;
                         default:
                             //TODO
-                            this.sendMessage(this.channel, toUser + "Not yet implemented (sorry)");
+                            this.outputMessage(this.channel, toUser + "Not yet implemented (sorry)");
                             break;
                     }
                 } else if (m.getBody().startsWith("+") && m.isMod()) {
                     // Add commands
                     String prefix = msgSplit[0].substring(1, msgSplit[0].length()).toLowerCase();
                     //TODO
-                    this.sendMessage(this.channel, toUser + "Not yet implemented (sorry)");
+                    this.outputMessage(this.channel, toUser + "Not yet implemented (sorry)");
                 } else if (m.getBody().startsWith("--") && m.isMod()) {
                     // Remove command
                     String prefix = msgSplit[0].substring(2, msgSplit[0].length()).toLowerCase();
                     //TODO
-                    this.sendMessage(this.channel, toUser + "Not yet implemented (sorry)");
+                    this.outputMessage(this.channel, toUser + "Not yet implemented (sorry)");
                 } else {
                     // Easter eggs :)
                     switch (m.getBody().toLowerCase()) {
                         case "i love you km_bot":
-                            this.sendMessage(this.channel, toUser + "I <3 you too!");
+                            this.outputMessage(this.channel, toUser + "I <3 you too!");
                             break;
                         case "km_bot is a dog":
-                            this.sendMessage(this.channel, toUser + "Woof!");
+                            this.outputMessage(this.channel, toUser + "Woof!");
                             break;
                         case "km_bot is a cat":
-                            this.sendMessage(this.channel, toUser + "Meow!");
+                            this.outputMessage(this.channel, toUser + "Meow!");
                             break;
                         case "km_bot is a beatle":
-                            this.sendMessage(this.channel, toUser + "All you need is love!");
+                            this.outputMessage(this.channel, toUser + "All you need is love!");
                             break;
                     }
                 }
@@ -117,6 +117,11 @@ public class Bot extends PircBot {
             } // End of Mod Excluded stuff
 
         }
+    }
+    
+    private void outputMessage(String channel, String text){
+        //TODO - Logging
+        this.sendMessage(channel, text);
     }
 
     @Override
