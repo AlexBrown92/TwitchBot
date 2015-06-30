@@ -5,6 +5,7 @@
  */
 package twitchbot;
 
+import db.DB;
 import db.DatabaseConnection;
 import java.io.FileInputStream;
 import java.util.Properties;
@@ -20,11 +21,12 @@ public class TwitchBot {
     /**
      * @param args the command line arguments
      */
-    public static DatabaseConnection db;
+    public static DB db;
     
     public static void main(String[] args) {
         Properties config = loadConfig();
-        db = new DatabaseConnection(config.getProperty("dbUrl"), config.getProperty("dbUser"), config.getProperty("dbPass"));
+        //db = new DatabaseConnection(config.getProperty("dbUrl"), config.getProperty("dbUser"), config.getProperty("dbPass"));
+        db = new DB(config.getProperty("dbUser"), config.getProperty("dbPass"),config.getProperty("dbUrl"));
         Bot kmBot = new Bot(config.getProperty("twitchUser"), config.getProperty("channel"));
 
         try {

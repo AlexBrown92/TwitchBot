@@ -17,8 +17,8 @@ public class DB {
     private static Connection db;
     private String connStr;
     
-    public DB(String dbUser, String dbPass) {
-        this.connStr = "jdbc:mysql://localhost/KM_bot?"+ "user=" + dbUser + "&password=" + dbPass;
+    public DB(String dbUser, String dbPass, String dbUri) {
+        this.connStr = dbUri+"?"+ "user=" + dbUser + "&password=" + dbPass;
         try {
             db = DriverManager.getConnection(connStr);
             db.close();
@@ -28,7 +28,7 @@ public class DB {
         }
     }
 
-    public Connection getDb() {
+    public Connection getConnection() {
         try {
             return DriverManager.getConnection(connStr);
         } catch (SQLException e) {

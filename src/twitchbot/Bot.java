@@ -5,6 +5,7 @@
  */
 package twitchbot;
 
+import commands.Commands;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,12 +21,14 @@ public class Bot extends PircBot {
 
     private String channel;
     private String username;
+    private Commands commands;
 
     public Bot(String twitchUser, String channel) {
         this.channel = channel;
         this.username = twitchUser;
         this.setName(this.username);
         this.setMessageDelay(1000);
+        this.commands = new Commands();
     }
 
     @Override
@@ -41,8 +44,7 @@ public class Bot extends PircBot {
                     String prefix = msgSplit[0].substring(1, msgSplit[0].length()).toLowerCase();
                     switch (prefix) {
                         case "help":
-                            //TODO
-                            this.sendMessage(this.channel, toUser + "Not yet implemented (sorry)");
+                            this.sendMessage(this.channel, toUser + "The commands available are: " + commands.outputCommands());
                             break;
                         case "mt":
                             this.sendMessage(this.channel, toUser + "multitwitch.tv/" + this.channel.substring(1) + "/" + msgSplit[1]);
