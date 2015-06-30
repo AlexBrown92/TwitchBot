@@ -5,6 +5,7 @@
  */
 package twitchbot;
 
+import db.DatabaseConnection;
 import java.io.FileInputStream;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -19,9 +20,12 @@ public class TwitchBot {
     /**
      * @param args the command line arguments
      */
+    public static DatabaseConnection db;
+    
     public static void main(String[] args) {
         Properties config = loadConfig();
-        Bot kmBot = new Bot(config.getProperty("twitchUser"),config.getProperty("twitchPass"),config.getProperty("ircServer"),config.getProperty("ircPort"),config.getProperty("channel"));
+        db = new DatabaseConnection(config.getProperty("dbUrl"), config.getProperty("dbUser"), config.getProperty("dbPass"));
+        Bot kmBot = new Bot(config.getProperty("twitchUser"), config.getProperty("channel"));
 
         try {
             kmBot.setVerbose(true);
@@ -33,18 +37,18 @@ public class TwitchBot {
             Logger.getLogger(TwitchBot.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    private static Properties loadConfig(){
+
+    private static Properties loadConfig() {
         Properties config = new Properties();
         try {
-        FileInputStream in = new FileInputStream("config.properties");
-        config.load(in);
-        in.close();
-        
-        } catch (Exception ex){
+            FileInputStream in = new FileInputStream("config.properties");
+            config.load(in);
+            in.close();
+
+        } catch (Exception ex) {
             Logger.getLogger(TwitchBot.class.getName()).log(Level.SEVERE, null, ex);
         }
         return config;
     }
-    
+
 }
