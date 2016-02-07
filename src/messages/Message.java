@@ -5,6 +5,12 @@
  */
 package messages;
 
+import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import static twitchbot.TwitchBot.db;
+
+
 /**
  *
  * @author Alex
@@ -16,6 +22,9 @@ public class Message {
     private String channel;
     private int timestamp;
     private String body;
+    private final String FLAG_MOD = "mod=1";
+    private final String FLAG_SUBSCRIBER = "subscriber=1";
+    private final String FLAG_TURBO = "turbo=1";
 
     public Message(String sender, String channel, int timestamp, String body) {
         this.sender = sender;
@@ -39,8 +48,8 @@ public class Message {
         if (wholeText.startsWith("@color=")){
             String[] infoSplit = msgSplit[INFO].split(";");
             this.sender = infoSplit[NAME].substring(13);
-            this.sub = infoSplit[SUB].endsWith("1");
-            this.mod = infoSplit[MOD].endsWith("mod");
+            this.sub = msgSplit[INFO].contains(FLAG_SUBSCRIBER);
+            this.mod = msgSplit[INFO].contains(FLAG_MOD);
             this.channel = msgSplit[CHANNEL];
             if (msgSplit.length > BODY_START){
                 this.body = msgSplit[BODY_START].substring(1);
@@ -50,6 +59,23 @@ public class Message {
             } else {
                 this.body = "";
             }
+            logMessage();
+        }
+    }
+    
+    private void logMessage(){
+        try (Connection conn = db.getConnection()) {
+            PreparedStatement addMessage = conn.prepareStatement(""
+                    + "INSERT INTO `message`(`messageSender`,`messageSub`,`messageMod`, `messageBody`)"
+                    + "VALUES(?,?,?,?);", Statement.RETURN_GENERATED_KEYS);
+            addMessage.setString(1, this.sender);
+            addMessage.setBoolean(2, this.sub);
+            addMessage.setBoolean(3, this.mod);
+            addMessage.setString(4, this.body);
+            addMessage.executeUpdate();
+            conn.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(Message.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

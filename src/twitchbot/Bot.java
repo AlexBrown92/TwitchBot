@@ -5,6 +5,7 @@
  */
 package twitchbot;
 
+import blacklist.Blacklist;
 import commands.Commands;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -22,6 +23,7 @@ public class Bot extends PircBot {
     private String channel;
     private String username;
     private Commands commands;
+    private Blacklist blacklist;
 
     public Bot(String twitchUser, String channel) {
         this.channel = channel;
@@ -29,6 +31,7 @@ public class Bot extends PircBot {
         this.setName(this.username);
         this.setMessageDelay(1000);
         this.commands = new Commands();
+        this.blacklist = new Blacklist();
     }
 
     @Override
@@ -54,15 +57,15 @@ public class Bot extends PircBot {
                             break;
                         case "blacklist":
                         case "blacklistadd":
-                            //TODO
                             if (m.isMod()) {
-                                this.outputMessage(this.channel, toUser + "Not yet implemented (sorry)");
+                                blacklist.addBlacklist(m.getBody());
+                                this.outputMessage(this.channel, toUser + "Blacklist updated");
                             }
                             break;
                         case "blacklistremove":
-                            //TODO
                             if (m.isMod()) {
-                                this.outputMessage(this.channel, toUser + "Not yet implemented (sorry)");
+                                blacklist.removeBlacklist(m.getBody());
+                                this.outputMessage(this.channel, toUser + "Blacklist updated");
                             }
                             break;
                         case "blacklistshow":
@@ -70,28 +73,38 @@ public class Bot extends PircBot {
                         case "blacklistdisplay":
                             //TODO
                             if (m.isMod()) {
-                                this.outputMessage(this.channel, toUser + "Not yet implemented (sorry)");
+                                this.outputMessage(this.channel, toUser + "Blacklist: " + blacklist.outputBlacklist());
                             }
                             break;
                         case "newsubs":
                             //TODO
                             this.outputMessage(this.channel, toUser + "Not yet implemented (sorry)");
                             break;
+                        case "p":
+                            if (m.isMod()){
+                                String target = msgSplit[1];
+                                if (target.startsWith("@")){
+                                    target = target.substring(1);
+                                }
+                                this.timeout(this.channel, target, "Moderator Decision", 1);
+                            }
                         default:
-                            //TODO
-                            this.outputMessage(this.channel, toUser + "Not yet implemented (sorry)");
+                            String out = commands.getCommandText(prefix);
+                            if ((out != null)&& (!out.isEmpty())) {
+                                this.outputMessage(channel, toUser + out);
+                            }
                             break;
                     }
-                } else if (m.getBody().startsWith("+") && m.isMod()) {
+                } else if (m.getBody().startsWith("++") && m.isMod()) {
                     // Add commands
-                    String prefix = msgSplit[0].substring(1, msgSplit[0].length()).toLowerCase();
-                    //TODO
-                    this.outputMessage(this.channel, toUser + "Not yet implemented (sorry)");
+                    String prefix = msgSplit[0].substring(2, msgSplit[0].length()).toLowerCase();
+                    commands.addCommand(m.getBody());
+                    this.outputMessage(this.channel, toUser + "Command Added: (^"+prefix+") " + commands.getCommandText(prefix));
                 } else if (m.getBody().startsWith("--") && m.isMod()) {
                     // Remove command
                     String prefix = msgSplit[0].substring(2, msgSplit[0].length()).toLowerCase();
-                    //TODO
-                    this.outputMessage(this.channel, toUser + "Not yet implemented (sorry)");
+                    commands.removeCommand(m.getBody());
+                    this.outputMessage(this.channel, toUser + "Command Removed: ^"+prefix);
                 } else {
                     // Easter eggs :)
                     switch (m.getBody().toLowerCase()) {
@@ -107,19 +120,32 @@ public class Bot extends PircBot {
                         case "km_bot is a beatle":
                             this.outputMessage(this.channel, toUser + "All you need is love!");
                             break;
+                        case "km_bot is cameron poe":
+                            this.outputMessage(this.channel, toUser + "Put the bunny back in the box!");
+                            break;
+                        case "what is love?":
+                            this.outputMessage(this.channel, toUser + "Baby don't hurt me, don't hurt me, no more.");
+                            break;
                     }
                 }
 
             } // End of Mod/sub only stuff
             // Mod Excluded stuff
             if (!m.isMod()) {
-
+                if (blacklist.containsBlacklistedTerm(m.getBody())){
+                    this.timeout(this.channel, m.getSender(), "Your message contained a word that has been blacklisted.", 1);
+                }
             } // End of Mod Excluded stuff
 
         }
     }
     
-    private void outputMessage(String channel, String text){
+    private void timeout(String channel, String name, String reason, int duration) {
+        this.sendMessage(channel, ".timeout " + name + " " + duration);
+        this.sendMessage(channel, "Timeout (" + duration + "s) ->" + name + "-> " + reason);
+    }
+
+    private void outputMessage(String channel, String text) {
         //TODO - Logging
         this.sendMessage(channel, text);
     }
