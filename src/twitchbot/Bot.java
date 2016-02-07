@@ -126,6 +126,8 @@ public class Bot extends PircBot {
                         case "what is love?":
                             this.outputMessage(this.channel, toUser + "Baby don't hurt me, don't hurt me, no more.");
                             break;
+                        case "who do you love the most km_bot":
+                            this.outputMessage(this.channel, toUser + "Of course I love " + m.getSender() + " the most!");
                     }
                 }
 
