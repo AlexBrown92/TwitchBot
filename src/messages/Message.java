@@ -20,17 +20,18 @@ public class Message {
     private boolean sub;
     private boolean mod;
     private String channel;
-    private int timestamp;
     private String body;
     private final String FLAG_MOD = "mod=1";
     private final String FLAG_SUBSCRIBER = "subscriber=1";
     private final String FLAG_TURBO = "turbo=1";
 
-    public Message(String sender, String channel, int timestamp, String body) {
+    public Message(String sender, String channel,  String body) {
         this.sender = sender;
         this.channel = channel;
-        this.timestamp = timestamp;
         this.body = body;
+        this.sub = false;
+        this.mod = true;
+        logMessage();
     }
 
     public Message(String wholeText) {
@@ -93,10 +94,6 @@ public class Message {
 
     public String getChannel() {
         return channel;
-    }
-
-    public int getTimestamp() {
-        return timestamp;
     }
 
     public String getBody() {
