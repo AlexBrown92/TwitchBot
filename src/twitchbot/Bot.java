@@ -98,13 +98,21 @@ public class Bot extends PircBot {
                 } else if (m.getBody().startsWith("++") && m.isMod()) {
                     // Add commands
                     String prefix = msgSplit[0].substring(2, msgSplit[0].length()).toLowerCase();
-                    commands.addCommand(m.getBody());
-                    this.outputMessage(this.channel, toUser + "Command Added: (^"+prefix+") " + commands.getCommandText(prefix));
+                    if (prefix.length() > 0){
+                        commands.addCommand(m.getBody());
+                        this.outputMessage(this.channel, toUser + "Command Added: (^"+prefix+") " + commands.getCommandText(prefix));
+                    } else {
+                        this.outputMessage(this.channel, toUser + "ERROR: Command cannot be empty. Did you mean: ++" + msgSplit[1] + " ?");
+                    }
                 } else if (m.getBody().startsWith("--") && m.isMod()) {
                     // Remove command
                     String prefix = msgSplit[0].substring(2, msgSplit[0].length()).toLowerCase();
-                    commands.removeCommand(m.getBody());
-                    this.outputMessage(this.channel, toUser + "Command Removed: ^"+prefix);
+                    if (prefix.length() > 0){
+                        commands.removeCommand(m.getBody());
+                        this.outputMessage(this.channel, toUser + "Command Removed: ^"+prefix);
+                    } else {
+                        this.outputMessage(this.channel, toUser + "ERROR: Command cannot be empty. Did you mean: --" + msgSplit[1] + " ?");
+                    }
                 } else {
                     // Easter eggs :)
                     switch (m.getBody().toLowerCase()) {
@@ -145,11 +153,12 @@ public class Bot extends PircBot {
     private void timeout(String channel, String name, String reason, int duration) {
         this.sendMessage(channel, ".timeout " + name + " " + duration);
         this.sendMessage(channel, "Timeout (" + duration + "s) ->" + name + "-> " + reason);
+        new Message(username, channel, "Timeout (" + duration + "s) ->" + name + "-> " + reason);
     }
 
     private void outputMessage(String channel, String text) {
-        //TODO - Logging
         this.sendMessage(channel, text);
+        new Message(username, channel, text);
     }
 
     @Override
